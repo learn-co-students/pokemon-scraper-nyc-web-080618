@@ -6,6 +6,7 @@ class Pokemon
 
   def initialize(id:, name:, type:, db:)
     @id = id
+    # @id = @@all.count + 1 -> This is also valid
     @name = name
     @type = type
     @db = db
