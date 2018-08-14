@@ -1,32 +1,45 @@
-require 'pry'
+require "pry"
 
 class Pokemon
-  attr_accessor :id, :name, :type, :db
-
+  attr_reader :id, :name, :type, :db
+  attr_accessor :hp
   @@all = []
-
-  def initialize(id:, name:, type:, db:)
-    @id = id
+  def initialize(name:, type:, db:, id:, hp:)
+    @db = db
     @name = name
     @type = type
-    @db = db
+    @id = id
+    @hp = hp
     @@all << self
-  end
-
-  def self.save(nameIn, typeIn, dbIn)
-    dbIn.execute("CREATE TABLE IF NOT EXISTS pokemon(id INTEGER PRIMARY KEY, name TEXT, type TEXT)")
-    dbIn.execute("INSERT INTO pokemon (name, type) VALUES (?, ?)", nameIn, typeIn)
-  end
-
-  def self.find(id, db)
-    myArray = db.execute("SELECT pokemon.name, pokemon.type FROM pokemon WHERE id = pokemon.id")
-    myPokemon = Pokemon.new(id: id, name: myArray[0][0], type: myArray[0][1], db: db)
-  end
+    end
 
   def self.all
     @@all
   end
 
-end
+  def self.save(name, type, db)
+    db.execute("INSERT INTO Pokemon (name, type) VALUES (?, ?)", name, type)
+  end
 
-#binding.pry
+  def self.find(id, db)
+    a = db.execute("SELECT * FROM Pokemon WHERE id = ?", id)
+    #binding.pry
+    mypokemon = Pokemon.new(name: a[0][1], type: a[0][2], hp: a[0][3], db: db, id: id)
+    #binding.pry
+    mypokemon
+  end
+#   def self.save(name, breed, age, database_connection)
+#   database_connection.execute("INSERT INTO cats (name, breed, age) VALUES (?, ?, ?)",name, breed, age)
+# end
+  def alter_hp(new_hp, db)
+    a = db.execute("UPDATE pokemon SET HP = ? WHERE id = ?", new_hp, self.id)
+    #b = db.execute("SELECT * FROM Pokemon WHERE id = ?", self.id)
+    b = Pokemon.find(self.id, db)
+    #binding.pry
+    b.hp
+    #binding.pry
+
+  end
+
+
+end #end of class
