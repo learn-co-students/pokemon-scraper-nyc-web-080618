@@ -31,11 +31,11 @@ class Pokemon
 #   database_connection.execute("INSERT INTO cats (name, breed, age) VALUES (?, ?, ?)",name, breed, age)
 # end
   def alter_hp(new_hp, db)
-
     a = db.execute("UPDATE pokemon SET HP = ? WHERE id = ?", new_hp, self.id)
-    b = db.execute("SELECT * FROM Pokemon WHERE id = ?", self.id)
+    #b = db.execute("SELECT * FROM Pokemon WHERE id = ?", self.id)
+    b = Pokemon.find(self.id, db)
     #binding.pry
-    @hp = b[0][3]
+    b.hp
     #binding.pry
 
   end
